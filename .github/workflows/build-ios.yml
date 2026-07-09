@@ -5,7 +5,8 @@ jobs:
   build:
     runs-on: macos-14
     env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      CI: false
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -20,4 +21,4 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Unsigned IPA via RoboVM
-        run: ./gradlew :ios:createIpa --stacktrace --info
+        run: ./gradlew :ios:createIpa -x test --no-daemon
