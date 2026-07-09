@@ -4,9 +4,6 @@ on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: macos-14
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-      CI: false
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -20,5 +17,11 @@ jobs:
       - name: Grant Execute Permission
         run: chmod +x gradlew
 
-      - name: Build Unsigned IPA via RoboVM
-        run: ./gradlew :ios:createIpa -x test --no-daemon
+      - name: Build Force Unsigned IPA
+        run: ./gradlew :ios:createIpa -Probovm.iosSkipSigning=true --no-daemon
+
+      - name: Upload Finished IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: shattered-pd-ipa
+          path: ios/build/robovm/*.ipa
